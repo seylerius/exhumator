@@ -1,0 +1,47 @@
+{title: "Exhumator Data Structure"; title-size:16}
+
+[Source] {color: blue}
+* Source ID
+  Source Name
+  Source URL
+
+[Funeral Home] {color: orange}
+* Funeral Home ID
+  Name
+  Location {mark: "<Expand This>"}
+  Source ID *
+
+[Step]
+* Step ID
+  Action
+  Target
+  Value {mark: "<optional>"}
+
+[Step Sequence]
+* Source ID *
+* Step ID *
+  Sequence
+
+[Dump] {color: green}
+* Dump ID
+  Source ID *
+  Title
+  Dump
+
+[Death] {color: yellow}
+* Death ID
+  Name
+  Date of Birth
+  Date of Death
+  Date of Service
+  Date of Interrment
+  Funeral Home ID *
+  Residence City
+  Dump ID *
+
+[Source] 1--+ (Funeral Home)
+[Source] 1--* (Step Sequence)
+[Step] 1--* (Step Sequence)
+[Source] 1--* [Dump]
+[Death] *--1 [Funeral Home]
+[Death] *--1 [Dump]
