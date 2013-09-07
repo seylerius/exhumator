@@ -25,10 +25,6 @@ class Step(object):
     values = Unicode()
 
     def __init__(self, action, target, values=None):
-        global actions
-        global actions_with_values
-        global url_regex
-
         if action not in actions:
             raise ValueError(u'"{action}" is not a valid action.'.format(action=action))
         if action in actions_with_values:
@@ -48,7 +44,6 @@ class Step(object):
         self.target = target
 
     def tuple(self):
-        global actions_with_values
         if self.action in actions_with_values:
             return (self.action, self.target, self.values.split("|"))
         else:
