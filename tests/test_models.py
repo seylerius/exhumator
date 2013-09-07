@@ -52,7 +52,7 @@ class TestStep:
             invalid_step = models.Step(u"florp", u"http://www.florp.com")
 
     def test_invalid_url(self, store):
-        with pytest.raises(ValueEror):
+        with pytest.raises(ValueError):
             invalid_step = models.Step(u"goto", u"foo-bar-bork")
 
     def test_find(self, store):
