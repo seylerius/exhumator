@@ -11,7 +11,7 @@ def store():
                   "(id INTEGER PRIMARY KEY, name VARCHAR, url VARCHAR)")
     # Create tables for models.Step and models.SourceStep
     store.execute("CREATE TABLE step "
-                  "(id INTEGER PRIMARY KEY, action VARCHAR, target VARCHAR, values VARCHAR)")
+                  "(id INTEGER PRIMARY KEY, action VARCHAR, target VARCHAR, \"values\" VARCHAR)")
     store.execute("CREATE TABLE source_step "
                   "(source_id INTEGER, step_id INTEGER, sequence INTEGER, PRIMARY KEY (source_id, step_id))")
     return store
