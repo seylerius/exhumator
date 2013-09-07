@@ -15,3 +15,15 @@ def expanded_calls(step):
     for args_combo in itertools.product(*listified_args):
         yield step[0], args_combo
 
+class Source(object):
+    __storm_table__ = "source"
+    id = Int(primary=True)
+    name = Unicode()
+    url = Unicode()
+
+    def __init__(self, name=u"", url=u"", id=None):
+        self.name = name
+        self.url = url
+
+    def __repr__(self):
+        return u"Source(name=\"{self.name}\", url=\"{self.url}\", id={self.id})".format(self=self)
