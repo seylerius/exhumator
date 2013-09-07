@@ -1,4 +1,4 @@
-from . import models
+from .. import models
 import pytest
 from storm.locals import *
 
@@ -12,7 +12,7 @@ def store(scope='module'):
 
 class TestSource:
     def test_create(self, store):
-        test_source = Source()
+        test_source = models.Source()
         test_source.name = "Joe's Funerals.com"
         test_source.url = "http://www.joesfunerals.com"
         store(test_source)
