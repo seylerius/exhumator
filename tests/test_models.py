@@ -2,8 +2,8 @@ from .. import models
 import pytest
 from storm.locals import *
 
-@pytest.fixture()
-def store(scope='module'):
+@pytest.fixture(scope='module')
+def store():
     database = create_database('sqlite:')
     store = Store(database)
     store.execute("CREATE TABLE source "
