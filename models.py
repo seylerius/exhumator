@@ -51,8 +51,9 @@ class Step(object):
 
 class SourceStep(object):
     __storm_table__ = "source_step"
-    source_id = Int(primary=True)
-    step_id = Int(primary=True)
+    __storm_primary__ = "source_id", "step_id"
+    source_id = Int()
+    step_id = Int()
     sequence = Int()
 
 class Source(object):
