@@ -8,7 +8,7 @@ actions_with_values = [u"select", u"text"]
 url_regex = re.compile(r"^(http(?:s)?\:\/\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(?:\/?|(?:\/[\w\-]+)*)(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$")
 
 def listify(x):
-    if not isinstance(x, list):
+    if type(x) not in [tuple, list]:
         x = [x]
     return x
 
@@ -18,31 +18,38 @@ def expanded_calls(step):
     for args_combo in itertools.product(*listified_args):
         yield step[0], args_combo
 
+def action_validator(obj, name, value):
+    if value not in actions:
+        raise ValueError(u'"{action}" is not a valid action.'.format(action=action))
+    else:
+        return value
+
+def target_validator(obj, name, value):
+    if obj.action == u"goto":
+        if not url_regex.match(value):
+            raise ValueError(u'Invalid target URL: {url}'.format(url=target))
+    return value
+
+def value_validator(obj, name, value):
+    if obj.action in actions_with_values:
+        if values is None:
+            raise ValueError(u'"{action}" requires a value.'.format(action=action))
+        else:
+            if type(values) is list:
+                return "|".join(values)
+            elif type(values) in [str, unicode]:
+                return unicode(values)
+            else:
+                raise ValueError(u'Invalid value type')
+    else:
+        return None
+
 class Step(object):
     __storm_table__ = "step"
     id = Int(primary=True)
-    action = Unicode()
-    target = Unicode()
-    values = Unicode()
-
-    def __init__(self, action, target, values=None):
-        if action not in actions:
-            raise ValueError(u'"{action}" is not a valid action.'.format(action=action))
-        if action in actions_with_values:
-            if values is None:
-                raise ValueError(u'"{action}" requires a value.'.format(action=action))
-            else:
-                if type(values) is list:
-                    self.values = "|".join(values)
-                elif type(values) in [str, unicode]:
-                    self.values = unicode(values)
-                else:
-                    raise ValueError(u'Invalid value type')
-        if action == u"goto" and not url_regex.match(target):
-            raise ValueError(u'Invalid target URL: {url}'.format(url=target))
-
-        self.action = action
-        self.target = target
+    action = Unicode(validator=action_validator)
+    target = Unicode(validator=target_validator)
+    values = Unicode(validator=value_validator)
 
     def tuple(self):
         if self.action in actions_with_values:

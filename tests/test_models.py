@@ -65,9 +65,7 @@ class TestStep:
 
     def test_mangle(self, store):
         test_source = store.get(models.Source, 1)
-        debug_steps = [store.get(models.SourceStep, (1,1)), store.get(models.SourceStep, (1,2))]
-        for step in debug_steps:
-            print "Source ID: {}, Step ID: {}, Sequence: {}".format(step.source_id, step.step_id, step.sequence)
+        print test_source.instructions()
         test_instructions = [(u"goto", u"http://www.joesfunerals.com"), 
                              (u"text", u"#password", u"foo"),
                              (u"goto", u"http://www.joesfunerals.com"), 
