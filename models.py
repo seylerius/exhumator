@@ -92,5 +92,8 @@ class Source(object):
 
     def instructions(self):
         all_expanded_calls = [expanded_calls(step.tuple()) for step in self.steps]
-        sequences = itertools.product(*all_expanded_calls)
-        return sequences
+        sequences = [sequence for sequence in itertools.product(*all_expanded_calls)]
+        flat_sequences = []
+        for sequence in sequences:
+            flat_sequences.extend(sequence)
+        return flat_sequences

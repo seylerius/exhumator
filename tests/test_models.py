@@ -66,8 +66,9 @@ class TestStep:
     def test_mangle(self, store):
         test_source = store.get(models.Source, 1)
         print test_source.instructions()
-        test_instructions = [(u"goto", u"http://www.joesfunerals.com"), 
-                             (u"text", u"#password", u"foo"),
-                             (u"goto", u"http://www.joesfunerals.com"), 
-                             (u"text", u"#password", u"bar")]
+        test_instructions = [(u'goto', (u'http://www.joesfunerals.com',)), 
+                             (u'text', (u'#password', u'foo')), 
+                             (u'goto', (u'http://www.joesfunerals.com',)), 
+                             (u'text', (u'#password', u'bar'))]
+ 
         assert test_instructions == test_source.instructions()
