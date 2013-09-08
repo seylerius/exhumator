@@ -51,6 +51,11 @@ class Step(object):
     target = Unicode(validator=target_validator)
     values = Unicode(validator=value_validator)
 
+    def __init__(self, action, target, values=None):
+        self.action = action
+        self.target = target
+        self.values = values
+
     def tuple(self):
         if self.action in actions_with_values:
             return (self.action, self.target, self.values.split("|"))
