@@ -1,5 +1,6 @@
 from storm.locals import *
 import re
+import itertools
 
 models = []
 actions = [u"goto", u"click", u"select", u"text", u"frame", u"dump"]
@@ -56,6 +57,17 @@ class SourceStep(object):
     step_id = Int()
     sequence = Int()
 
+    def __storm_pre_flush__(self):
+        if self.sequence is None:
+            store = Store.of(self)
+            steps = [step for step in store.get(Source, self.source_id).steps]
+            if len(steps):
+                sequence_end = store.get(SourceStep, (self.source_id, steps[-1].id)).sequence
+                self.sequence = sequence_end + 1
+            else:
+                self.sequence = 1
+        print "{}:{}:{}".format(self.source_id, self.step_id, self.sequence)
+
 class Source(object):
     __storm_table__ = "source"
     id = Int(primary=True)
@@ -69,3 +81,16 @@ class Source(object):
 
     def __repr__(self):
         return u"Source(name=\"{self.name}\", url=\"{self.url}\", id={self.id})".format(self=self)
+
+    def __storm_loaded__(self):
+        sequence = 0
+        store = Store.of(self)
+        for step in self.steps:
+            sequence += 1
+            store.get(SourceStep, (self.id, step.id)).sequence = sequence
+            print sequence
+
+    def instructions(self):
+        all_expanded_calls = [expanded_calls(step.tuple()) for step in self.steps]
+        sequences = itertools.product(*all_expanded_calls)
+        return sequences

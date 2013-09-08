@@ -13,7 +13,7 @@ def store():
     store.execute("CREATE TABLE step "
                   "(id INTEGER PRIMARY KEY, action VARCHAR, target VARCHAR, \"values\" VARCHAR)")
     store.execute("CREATE TABLE source_step "
-                  "(source_id INTEGER, step_id INTEGER, sequence INTEGER, PRIMARY KEY (source_id, step_id))")
+                  "(source_id INTEGER, step_id INTEGER, sequence INTEGER, PRIMARY KEY (source_id, step_id), UNIQUE (source_id, sequence))")
     return store
 
 class TestSource:
@@ -44,6 +44,7 @@ class TestStep:
         test_source = store.get(models.Source, 1)
         test_step2 = models.Step(u"text", u"#password", u"foo|bar")
         test_source.steps.add(test_step)
+        store.flush()
         test_source.steps.add(test_step2)
         store.commit()
 
@@ -64,6 +65,9 @@ class TestStep:
 
     def test_mangle(self, store):
         test_source = store.get(models.Source, 1)
+        debug_steps = [store.get(models.SourceStep, (1,1)), store.get(models.SourceStep, (1,2))]
+        for step in debug_steps:
+            print "Source ID: {}, Step ID: {}, Sequence: {}".format(step.source_id, step.step_id, step.sequence)
         test_instructions = [(u"goto", u"http://www.joesfunerals.com"), 
                              (u"text", u"#password", u"foo"),
                              (u"goto", u"http://www.joesfunerals.com"), 
