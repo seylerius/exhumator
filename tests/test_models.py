@@ -2,35 +2,19 @@ from .. import models
 import pytest
 from storm.locals import *
 
-@pytest.fixture(scope='module')
-def store():
-    database = create_database('sqlite:')
-    store = Store(database)
-    # Create table for models.Source
-    store.execute("CREATE TABLE source "
-                  "(id INTEGER PRIMARY KEY, name VARCHAR, url VARCHAR)")
-    # Create tables for models.Step and models.SourceStep
-    store.execute("CREATE TABLE step "
-                  "(id INTEGER PRIMARY KEY, action VARCHAR, target VARCHAR, \"values\" VARCHAR)")
-    store.execute("CREATE TABLE source_step "
-                  "(source_id INTEGER, step_id INTEGER, sequence INTEGER, PRIMARY KEY (source_id, step_id), UNIQUE (source_id, sequence))")
-    return store
-
 class TestSource:
-    def test_create(self, store):
-        test_source = models.Source()
-        test_source.name = u"Joe's Funerals.com"
-        test_source.url = u"http://www.joesfunerals.com"
-        store.add(test_source)
-        store.commit()
-        assert u"{source!r}".format(source=test_source) == u"Source(name=\"Joe's Funerals.com\", url=\"http://www.joesfunerals.com\", id=1)"
+    def test_create(self, store, source):
+        """Can a source instantiate and commit?"""
 
-    def test_find(self, store):
-        test_source_name = u"Joe's Funerals.com"
-        test_source_url = u"http://www.joesfunerals.com"
-        test_source_id = 1
-        found_source = store.find(models.Source, models.Source.name == test_source_name).one()
-        assert u"Source(name=\"{name}\", url=\"{url}\", id={id})".format(name=test_source_name, url=test_source_url, id=test_source_id) == found_source.__repr__()
+        store.add(source)
+        store.commit()
+
+    def test_find(self, store, source):
+        """Can a source be searched for in the database?"""
+
+        store.add(source)
+        found_source = store.find(models.Source, models.Source.name == source.name).one()
+        assert found_source is source
 
 class TestStep:
     def test_create(self, store):
