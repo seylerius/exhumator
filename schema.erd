@@ -1,31 +1,32 @@
 {title: "Exhumator Data Structure"; title-size:16}
 
 [Source] {color: blue}
-* Source ID
+* ID
   Source Name
   Source URL
 
 [Funeral Home] {color: orange}
-* Funeral Home ID
+* Home ID
   Name
   Location {mark: "<Expand This>"}
   Source ID *
 
 [Step]
-* Step ID
+* ID
   Action
   Target
   Value {mark: "<optional>"}
 
-[Step Sequence]
-* Source ID *
+[SourceStep]
+* ID *
 * Step ID *
   Sequence
 
 [Dump] {color: green}
-* Dump ID
+* ID
   Source ID *
   Title
+  Mined
   Dump
 
 [Death] {color: yellow}
@@ -35,13 +36,31 @@
   Date of Death
   Date of Service
   Date of Interrment
-  Funeral Home ID *
   Residence City
+  Funeral Home ID *
   Dump ID *
+  Source ID *
+
+[MiningRule]
+* ID
+  Source ID *
+  Dump Title *
+
+[MiningRuleField]
+* ID
+  MiningRule ID *
+  Field
+  Selector
+  Condition
+  Conversion
 
 [Source] 1--+ (Funeral Home)
-[Source] 1--* (Step Sequence)
-[Step] 1--* (Step Sequence)
+[Source] 1--* (SourceStep)
+[Step] 1--* (SourceStep)
 [Source] 1--* [Dump]
 [Death] *--1 [Funeral Home]
 [Death] *--1 [Dump]
+[Death] *--1 [Source]
+[MiningRule] 1--+ [MiningRuleField]
+[MiningRule] *--1 [Source]
+[MiningRule] *--1 [Dump]
