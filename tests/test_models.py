@@ -17,26 +17,18 @@ class TestSource:
         assert found_source is source
 
 class TestStep:
-    def test_create(self, store):
-        test_step = models.Step(u"goto", u"http://www.joesfunerals.com")
-        store.add(test_step)
-        store.commit()
-        assert test_step == store.get(models.Step, 1)
+    def test_create(self, store, step):
+        """Can a step instantiate and commit?"""
 
-    def test_add(self, store):
-        test_step = store.get(models.Step, 1)
-        test_source = store.get(models.Source, 1)
-        test_step2 = models.Step(u"text", u"#password", u"foo|bar")
-        test_source.steps.add(test_step)
-        store.flush()
-        test_source.steps.add(test_step2)
+        store.add(step)
         store.commit()
+        assert step is store.get(models.Step, step.id)
 
-    def test_invalid_action(self, store):
+    def test_invalid_action(self):
         with pytest.raises(ValueError):
             invalid_step = models.Step(u"florp", u"http://www.florp.com")
 
-    def test_invalid_url(self, store):
+    def test_invalid_url(self):
         with pytest.raises(ValueError):
             invalid_step = models.Step(u"goto", u"foo-bar-bork")
 
