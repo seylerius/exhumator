@@ -35,3 +35,9 @@ def sources(source):
     source2 = models.Source(name=u"Bob's Funerals.com", url=u"http://www.bobsfunerals.com")
     source3 = models.Source(name=u"Jim's Funerals.com", url=u"http://www.jimsfunerals.com")
     return (source, source2, source3)
+
+@pytest.fixture()
+def step():
+    """Create a test step."""
+    
+    step = models.Step(action=u"goto", target=u"http://www.joesfunerals.com")
