@@ -32,19 +32,32 @@ class TestStep:
         with pytest.raises(ValueError):
             invalid_step = models.Step(u"goto", u"foo-bar-bork")
 
-    def test_find(self, store):
-        test_source = store.get(models.Source, 1)
-        test_step1 = store.get(models.Step, 1)
-        test_step2 = store.get(models.Step, 2)
-        assert test_step1 in test_source.steps
-        assert test_step2 in test_source.steps
+    def test_find(self, store, source, steps):
+        """Do steps associate properly with a source?"""
 
-    def test_mangle(self, store):
-        test_source = store.get(models.Source, 1)
-        print test_source.instructions()
+        store.add(source)
+        for step in steps:
+            store.add(step)
+        store.flush()
+        for step in steps:
+            source.steps.add(step)
+        store.flush()
+        for step in steps:
+            assert step in source.steps
+
+    def test_mangle(self, store, source, steps):
+        store.add(source)
+        for step in steps:
+            store.add(step)
+        store.flush()
+        for step in steps:
+            source.steps.add(step)
+            store.flush()
         test_instructions = [(u'goto', (u'http://www.joesfunerals.com',)), 
                              (u'text', (u'#password', u'foo')), 
+                             (u'dump', (u'test dump',)),
                              (u'goto', (u'http://www.joesfunerals.com',)), 
-                             (u'text', (u'#password', u'bar'))]
+                             (u'text', (u'#password', u'bar')),
+                             (u'dump', (u'test dump',))]
  
-        assert test_instructions == test_source.instructions()
+        assert test_instructions == source.instructions()
