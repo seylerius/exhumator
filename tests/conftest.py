@@ -2,6 +2,16 @@ import pytest
 from storm.locals import *
 from .. import models
 
+lorem_ipsum = u"""<html>
+    <body>
+        <ul>
+           <li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
+           <li>Aliquam tincidunt mauris eu risus.</li>
+           <li>Vestibulum auctor dapibus neque.</li>
+        </ul>
+    </body>
+</html>"""
+
 @pytest.fixture()
 def store():
     """Build a test database.
@@ -25,14 +35,12 @@ def store():
 @pytest.fixture()
 def source():
     """Create a test source."""
-
     source = models.Source(name=u"Joe's Funerals.com", url=u"http://www.joesfunerals.com")
     return source
 
 @pytest.fixture()
 def sources(source):
     """Create three test sources."""
-
     source2 = models.Source(name=u"Bob's Funerals.com", url=u"http://www.bobsfunerals.com")
     source3 = models.Source(name=u"Jim's Funerals.com", url=u"http://www.jimsfunerals.com")
     return (source, source2, source3)
@@ -40,16 +48,25 @@ def sources(source):
 @pytest.fixture()
 def step():
     """Create a test step."""
-    
     step = models.Step(action=u"goto", target=u"http://www.joesfunerals.com")
-
     return step
 
 @pytest.fixture()
 def steps(step):
     """Create three test steps."""
-
     step2 = models.Step(action=u"text", target=u"#password", values="foo|bar")
     step3 = models.Step(action=u"dump", target=u"test dump")
-
     return (step, step2, step3)
+
+@pytest.fixture()
+def dump():
+    """Create a test dump."""
+    dump = models.Dump(title=u"test dump", data=lorem_ipsum)
+    return dump
+
+@pytest.fixture()
+def dumps(dump):
+    """Create three test dumps."""
+    dump2 = models.Dump(title=u"test2 dump", data=lorem_ipsum)
+    dump3 = models.Dump(title=u"test dump", data=lorem_ipsum)
+    return (dump, dump2, dump3)
