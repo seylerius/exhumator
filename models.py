@@ -66,7 +66,6 @@ class SourceStep(object):
                 self.sequence = sequence_end + 1
             else:
                 self.sequence = 1
-        print "{}:{}:{}".format(self.source_id, self.step_id, self.sequence)
 
 class Source(object):
     __storm_table__ = "source"

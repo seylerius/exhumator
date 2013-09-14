@@ -1,4 +1,5 @@
 import pytest
+from storm.locals import *
 from .. import models
 
 @pytest.fixture()
@@ -41,3 +42,14 @@ def step():
     """Create a test step."""
     
     step = models.Step(action=u"goto", target=u"http://www.joesfunerals.com")
+
+    return step
+
+@pytest.fixture()
+def steps(step):
+    """Create three test steps."""
+
+    step2 = models.Step(action=u"text", target=u"#password", values="foo|bar")
+    step3 = models.Step(action=u"dump", target=u"test dump")
+
+    return (step, step2, step3)
