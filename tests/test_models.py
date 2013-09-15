@@ -80,3 +80,17 @@ class TestDump:
         unmined_dumps = store.find(models.Dump, models.Dump.mined == False)
         for dump in unmined_dumps:
             assert dump in dumps
+
+class TestFuneralHome:
+    def test_create(self, store, home):
+        store.add(home)
+        store.flush()
+        assert home is store.get(models.Home, home.id)
+
+    def test_find(self, store, source, home):
+        store.add(source)
+        store.add(home)
+        store.flush()
+        home.source = source
+        store.flush()
+        assert home in source.homes

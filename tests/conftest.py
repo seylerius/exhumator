@@ -72,3 +72,15 @@ def dumps(dump):
     dump2 = models.Dump(title=u"test2 dump", data=lorem_ipsum)
     dump3 = models.Dump(title=u"test dump", data=lorem_ipsum)
     return (dump, dump2, dump3)
+
+@pytest.fixture()
+def home():
+    home = models.FuneralHome(name="Joe's Funerals")
+    return home
+
+@pytest.fixture()
+def homes(home):
+    home2 = models.FuneralHome(name=u"Bob's Funerals")
+    home3 = models.FuneralHome(name=u"Jim's Funerals")
+    return (home, home2, home3)
+
