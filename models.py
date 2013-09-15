@@ -1,6 +1,7 @@
 from storm.locals import *
 import re
 import itertools
+from datetime import datetime
 
 models = []
 actions = [u"goto", u"click", u"select", u"text", u"frame", u"dump"]
@@ -18,7 +19,7 @@ def expanded_calls(step):
     for args_combo in itertools.product(*listified_args):
         yield step[0], args_combo
 
-class Step(object):
+class Step(Storm):
     __storm_table__ = "step"
     id = Int(primary=True)
     action = Unicode()
@@ -50,7 +51,7 @@ class Step(object):
         else:
             return (self.action, self.target)
 
-class SourceStep(object):
+class SourceStep(Storm):
     __storm_table__ = "source_step"
     __storm_primary__ = "source_id", "step_id"
     source_id = Int()
@@ -67,12 +68,13 @@ class SourceStep(object):
             else:
                 self.sequence = 1
 
-class Source(object):
+class Source(Storm):
     __storm_table__ = "source"
     id = Int(primary=True)
     name = Unicode()
     url = Unicode()
     steps = ReferenceSet(id, SourceStep.source_id, SourceStep.step_id, Step.id, SourceStep.sequence)
+    dumps = ReferenceSet(id, "Dump.source_id")
 
     def __init__(self, name=u"", url=u"", id=None):
         self.name = name
@@ -96,3 +98,23 @@ class Source(object):
         for sequence in sequences:
             flat_sequences.extend(sequence)
         return flat_sequences
+
+class Dump(Storm):
+    __storm_table__ = "dump"
+    id = Int(primary=True)
+    source_id = Int()
+    source = Reference(source_id, Source.id)
+    title = Unicode()
+    mined = Bool()
+    locked = DateTime()
+    dump = Unicode()
+
+    def __init__(self, title=u"Dump", data=u''):
+        self.title = title
+        self.data = data
+
+    def lock(self):
+        self.locked = datetime.now()
+
+    def unlock(self):
+        self.locked = datetime(0,0,0)
