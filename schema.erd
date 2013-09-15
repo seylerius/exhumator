@@ -28,6 +28,7 @@
   Title
   Mined
   Dump
+  Locked
 
 [Death] {color: yellow}
 * Death ID
