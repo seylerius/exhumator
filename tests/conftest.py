@@ -30,6 +30,8 @@ def store():
                   "(id INTEGER PRIMARY KEY, action VARCHAR, target VARCHAR, \"values\" VARCHAR)")
     store.execute("CREATE TABLE source_step "
                   "(source_id INTEGER, step_id INTEGER, sequence INTEGER, PRIMARY KEY (source_id, step_id), UNIQUE (source_id, sequence))")
+    store.execute("CREATE TABLE dump "
+                  "(id INTEGER PRIMARY KEY, source_id INTEGER, title VARCHAR, mined INT, locked VARCHAR, dump MEDIUMTEXT)")
     return store
 
 @pytest.fixture()

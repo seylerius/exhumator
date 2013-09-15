@@ -57,24 +57,26 @@ class TestStep:
         assert test_instructions == source.instructions()
 
 class TestDump:
-    def test_create(self, store, source, dump):
+    def test_create(self, store, dump):
         """Can a dump be instantiated?"""
-        store.add(source)
-        store.flush()
         store.add(dump)
-        assert dump is store.get(Models.Dump, dump.source_id)
+        store.flush()
+        assert dump is store.get(models.Dump, dump.id)
 
     def test_find(self, store, source, dump):
         """Can a dump be found based on source_id and title?"""
         store.add(source)
         store.add(dump)
+        store.flush()
         source.dumps.add(dump)
+        store.flush()
         assert dump is store.find(models.Dump, models.Dump.source_id == source.id, models.Dump.title == dump.title).one()
 
     def test_unmined(self, store, dumps):
         """Find unmined dumps."""
         for dump in dumps:
             store.add(dump)
+        store.flush()
         unmined_dumps = store.find(models.Dump, models.Dump.mined == False)
-        for dump in dumps:
-            assert dump in unmined_dumps
+        for dump in unmined_dumps:
+            assert dump in dumps

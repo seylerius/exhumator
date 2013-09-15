@@ -19,7 +19,7 @@ def expanded_calls(step):
     for args_combo in itertools.product(*listified_args):
         yield step[0], args_combo
 
-class Step(storm):
+class Step(Storm):
     __storm_table__ = "step"
     id = Int(primary=True)
     action = Unicode()
@@ -51,7 +51,7 @@ class Step(storm):
         else:
             return (self.action, self.target)
 
-class SourceStep(storm):
+class SourceStep(Storm):
     __storm_table__ = "source_step"
     __storm_primary__ = "source_id", "step_id"
     source_id = Int()
@@ -108,6 +108,10 @@ class Dump(Storm):
     mined = Bool()
     locked = DateTime()
     dump = Unicode()
+
+    def __init__(self, title=u"Dump", data=u''):
+        self.title = title
+        self.data = data
 
     def lock(self):
         self.locked = datetime.now()
