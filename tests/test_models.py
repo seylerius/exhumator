@@ -85,7 +85,7 @@ class TestFuneralHome:
     def test_create(self, store, home):
         store.add(home)
         store.flush()
-        assert home is store.get(models.Home, home.id)
+        assert home is store.get(models.FuneralHome, home.id)
 
     def test_find(self, store, source, home):
         store.add(source)

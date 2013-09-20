@@ -32,6 +32,8 @@ def store():
                   "(source_id INTEGER, step_id INTEGER, sequence INTEGER, PRIMARY KEY (source_id, step_id), UNIQUE (source_id, sequence))")
     store.execute("CREATE TABLE dump "
                   "(id INTEGER PRIMARY KEY, source_id INTEGER, title VARCHAR, mined INT, locked VARCHAR, dump MEDIUMTEXT)")
+    store.execute("CREATE TABLE funeral_home "
+                  "(id INTEGER PRIMARY KEY, name VARCHAR, city VARCHAR, state VARCHAR, source_id INTEGER)")
     return store
 
 @pytest.fixture()
@@ -75,7 +77,7 @@ def dumps(dump):
 
 @pytest.fixture()
 def home():
-    home = models.FuneralHome(name="Joe's Funerals")
+    home = models.FuneralHome(name=u"Joe's Funerals")
     return home
 
 @pytest.fixture()

@@ -75,6 +75,7 @@ class Source(Storm):
     url = Unicode()
     steps = ReferenceSet(id, SourceStep.source_id, SourceStep.step_id, Step.id, SourceStep.sequence)
     dumps = ReferenceSet(id, "Dump.source_id")
+    homes = ReferenceSet(id, "FuneralHome.source_id")
 
     def __init__(self, name=u"", url=u"", id=None):
         self.name = name
@@ -118,3 +119,15 @@ class Dump(Storm):
 
     def unlock(self):
         self.locked = datetime(0,0,0)
+
+class FuneralHome(Storm):
+    __storm_table__ = "funeral_home"
+    id = Int(primary=True)
+    name = Unicode()
+    city = Unicode()
+    state = Unicode()
+    source_id = Int()
+    source = Reference(source_id, Source.id)
+    
+    def __init__(self, name):
+        self.name = name
