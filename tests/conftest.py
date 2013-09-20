@@ -1,6 +1,7 @@
 import pytest
 from storm.locals import *
 from .. import models
+from datetime import datetime, timedelta
 
 lorem_ipsum = u"""<html>
     <body>
@@ -86,3 +87,8 @@ def homes(home):
     home3 = models.FuneralHome(name=u"Jim's Funerals")
     return (home, home2, home3)
 
+@pytest.fixture()
+def death():
+    death = models.Death(name="James Jameson", date_death=datetime(2013, 6, 5), date_service=datetime(2013, 6, 10), 
+            date_burial=datetime(2013, 6, 13), city="Jameston", state="VA")
+    return death
